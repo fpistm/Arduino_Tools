@@ -59,8 +59,13 @@ set PORT=%~3
 shift
 goto :opt
 
+:: Finds the COMPORT with manufacturer StMicro and knocks the COM POrt at 1200 baud rate
 :DFU
 set PORT=USB1
+wmic path Win32_SerialPort Where "Caption LIKE '%%StMicro%%'" Get DeviceID | findstr "COM" > tmpFile.txt
+del tmpFile.txt 
+set /p cdc_port=<tmpFile.txt
+mode %%cdc_port%% BAUD=1200
 goto :opt
 
 :opt
