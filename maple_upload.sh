@@ -50,13 +50,9 @@ if ! "${DIR}/${OS_DIR}/upload_reset${EXT}" "${dummy_port_fullpath}" 750; then
   sleep 2 # Wait for user to see message.
 fi
 
-COUNTER=5
+COUNTER=1
 while
-  if [ $# -eq 5 ]; then
-    "${DIR}/dfu-util.sh" -d "${usbID}" -a "${altID}" -D "${binfile}" "--dfuse-address $5" -R
-  else
-    "${DIR}/dfu-util.sh" -d "${usbID}" -a "${altID}" -D "${binfile}" -R
-  fi
+  "${DIR}/dfu-util.sh" -d "${usbID}" -a "${altID}" -D "${binfile}" -R
   ret=$?
 do
   if [ $ret -eq 0 ]; then
