@@ -1,4 +1,6 @@
 #!/bin/sh -
+set -o nounset # Treat unset variables as an error
+set -o xtrace # Print command traces before executing command.
 #
 # Use the correct dfu-util program based on the architecture
 #

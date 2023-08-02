@@ -6,10 +6,19 @@ if [ $# -lt 4 ]; then
   echo "Usage: $0 <dummy_port> <altID> <usbID> <binfile>" >&2
   exit 1
 fi
-altID="$2"
-usbID="$3"
-binfile="$4"
+altID=$2
+usbID=$3
+binfile=$4
 EXT=""
+ADDRESS=0x8000000
+OFFSET=0x0
+
+if [ "${altID}" = 1 ]; then
+  OFFSET=0x5000
+elif [ "${altID}" = 2 ]; then
+  OFFSET=0x2000
+fi
+ADDRESS=$(printf "0x%x" $((ADDRESS + OFFSET)))
 
 UNAME_OS="$(uname -s)"
 case "${UNAME_OS}" in
@@ -52,11 +61,7 @@ fi
 
 COUNTER=5
 while
-  if [ $# -eq 5 ]; then
-    "${DIR}/dfu-util.sh" -d "${usbID}" -a "${altID}" -D "${binfile}" "--dfuse-address $5" -R
-  else
-    "${DIR}/dfu-util.sh" -d "${usbID}" -a "${altID}" -D "${binfile}" -R
-  fi
+  "${DIR}/dfu-util.sh" -d "${usbID}" -a "${altID}" -D "${binfile}" --dfuse-address "${ADDRESS}:leave"
   ret=$?
 do
   if [ $ret -eq 0 ]; then
