@@ -48,6 +48,11 @@ esac
 # Get the directory where the script is running.
 DIR=$(cd "$(dirname "$0")" && pwd)
 
+# Copy .bin as .dfu
+cp "${binfile}" "${binfile%.bin}.dfu"
+# Add DFU suffix to .dfu file
+"${DIR}/dfu-suffix.sh" -v "${usbVID}" -p "${usbPID}" -a "${binfile%.bin}.dfu"
+
 #  ----------------- IMPORTANT -----------------
 # The 2nd parameter to upload_reset is the delay after resetting
 # before it exits. This value is in milliseonds.
@@ -65,7 +70,7 @@ fi
 
 COUNTER=5
 while
-  "${DIR}/dfu-util.sh" -d "${usbVID}:${usbPID}" -a "${altID}" -D "${binfile}" -R
+  "${DIR}/dfu-util.sh" -d "${usbVID}:${usbPID}" -a "${altID}" -D "${binfile%.bin}.dfu" -R
   ret=$?
 do
   if [ $ret -eq 0 ]; then
